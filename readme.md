@@ -401,3 +401,129 @@ $builder
 ;
 ```
 
+Bon dev ✨
+
+---
+
+## 🔜 Suite après les migrations (plan d’action rapide)
+
+Une fois `php bin/console doctrine:migrations:migrate -n` exécuté, enchaîne :
+
+1. **Sécurité & Comptes**
+
+```bash
+php bin/console make:user              # crée l’entité User (email/username + password)
+php bin/console make:registration-form # inscription + hash du mot de passe
+php bin/console make:auth              # login form authenticator
+```
+
+* Protège les pages d’écriture (reviews/favoris) pour `ROLE_USER`.
+
+2. **Modèle de données (v1)**
+
+```bash
+php bin/console make:entity Anime
+#  title:string(180) unique, slug:string(180) unique, synopsis:text, coverUrl:string nullable,
+#  status:string(20) (ONGOING/FINISHED), avgRating:float nullable, createdAt:datetime_immutable, updatedAt:datetime_mutable
+
+php bin/console make:entity Review
+#  rating:smallint (1..10), content:text, createdAt:datetime_immutable
+#  author: ManyToOne -> User (inversedBy: reviews)
+#  anime:  ManyToOne -> Anime (inversedBy: reviews)
+
+php bin/console make:entity Favorite
+#  createdAt:datetime_immutable
+#  user:  ManyToOne -> User (inversedBy: favorites)
+#  anime: ManyToOne -> Anime (inversedBy: favorites)
+```
+
+Ajoute une **contrainte unique** sur `(user, anime)` dans `Favorite` (via annotation/attribute + migration) et des **validations** (`rating` ∈ [1,10], `title` non vide).
+
+3. **Migrations**
+
+```bash
+php bin/console make:migration
+php bin/console doctrine:migrations:migrate -n
+```
+
+4. **Contrôleurs & Pages**
+
+```bash
+php bin/console make:controller HomeController
+php bin/console make:controller AnimeController
+php bin/console make:controller ReviewController
+```
+
+* Routes clés : `/` (accueil/top), `/anime` (liste + pagination), `/anime/{slug}` (fiche + reviews), `/login`, `/register`.
+* Bouton **Favori** (toggle) : action POST protégée pour `ROLE_USER`.
+
+5. **Templates**
+
+* `templates/base.html.twig` avec Tailwind (CDN déjà fourni).
+* Vues : `anime/index.html.twig`, `anime/show.html.twig`, `review/_form.html.twig`.
+
+6. **Formulaires**
+
+```bash
+php bin/console make:form AnimeType
+php bin/console make:form ReviewType
+```
+
+* `ReviewType`: champ `rating` (min=1, max=10), `content` (textarea).
+* Restreins la création/suppression d’une review à son **auteur** (ou admin).
+
+7. **Moyenne des notes (avgRating)**
+
+* Soit via **requête agrégée** au rendu,
+* Soit via **EventSubscriber Doctrine** (postPersist/postUpdate sur Review) qui recalcule et met à jour `Anime.avgRating`.
+
+8. **Fixtures (données de démo)**
+
+```bash
+composer require --dev orm-fixtures
+php bin/console make:fixtures
+php bin/console doctrine:fixtures:load -n
+```
+
+Inclure : 1 admin (`ROLE_ADMIN`), plusieurs users, ~20 animes, ~50 reviews.
+
+9. **Règles d’accès** (`config/packages/security.yaml`)
+
+```yaml
+security:
+    access_control:
+        - { path: '^/login', roles: PUBLIC_ACCESS }
+        - { path: '^/register', roles: PUBLIC_ACCESS }
+        - { path: '^/anime/new', roles: ROLE_ADMIN }
+        - { path: '^/anime/[0-9]+/edit', roles: ROLE_ADMIN }
+        - { path: '^/review', roles: ROLE_USER }
+        - { path: '^/favorite', roles: ROLE_USER }
+```
+
+10. **Lancer l’app**
+
+```bash
+symfony server:start -d   # ou symfony serve -d
+# puis http://127.0.0.1:8000
+```
+
+11. **Optionnels (plus tard)**
+
+* Back-office : `composer require easycorp/easyadmin-bundle`
+* API publique : `composer require api` (API Platform)
+* Upload cover : `vich/uploader-bundle`
+
+---
+
+## 🪟 Windows / WAMP — Connexion MySQL (rappel)
+
+Sous WAMP, `root` est souvent **sans mot de passe** et tu utilises MySQL **9.1**.
+Crée un fichier **`.env.local`** (non versionné) et mets :
+
+```env
+DATABASE_URL="mysql://root:@127.0.0.1:3306/manga_hub?serverVersion=9.1"
+```
+
+> Si la BDD `manga_hub` existe déjà, **ne relance pas** `doctrine:database:create`. Passe directement aux migrations.
+
+Besoin que je génère les **commandes exactes** pour tes entités (avec tous les champs) et un **subscriber** prêt à l’emploi pour `avgRating` ? Je peux les ajouter dans le README en exemples complets.
