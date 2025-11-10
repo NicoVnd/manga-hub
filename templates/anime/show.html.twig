@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ anime.title }}{% endblock %}
+{% block body %}
+<article class="grid md:grid-cols-2 gap-6">
+  <img src="{{ anime.coverUrl }}" alt="{{ anime.title }}" class="rounded">
+  <div>
+    <h1 class="text-3xl font-bold mb-2">{{ anime.title }}</h1>
+    <div class="mb-2 text-sm text-slate-600">Statut: {{ anime.status }} • Note: {{ anime.avgRating ?? '—' }}</div>
+    <p class="mb-6">{{ anime.synopsis }}</p>
+    <a href="{{ path('anime_index') }}" class="underline">← Retour</a>
+  </div>
+</article>
+{% endblock %}

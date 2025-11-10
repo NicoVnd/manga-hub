@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}Manga Hub{% endblock %}
+{% block body %}
+<h1 class="text-2xl font-bold mb-4">Top animes</h1>
+<ul class="grid gap-3 md:grid-cols-3">
+  {% for a in top %}
+    <li class="p-3 rounded border">
+      <a href="{{ path('anime_show', {slug: a.slug}) }}" class="font-semibold">{{ a.title }}</a>
+      <div class="text-sm text-slate-600">Note: {{ a.avgRating ?? '—' }}</div>
+    </li>
+  {% endfor %}
+</ul>
+<p class="mt-6"><a class="underline" href="{{ path('anime_index') }}">Voir tous les animes →</a></p>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% block title %}Tous les animes{% endblock %}
+{% block body %}
+<h1 class="text-2xl font-bold mb-4">Tous les animes</h1>
+<ul class="space-y-2">
+  {% for a in animes %}
+    <li>
+      <a class="underline" href="{{ path('anime_show', {slug: a.slug}) }}">{{ a.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
