@@ -13,4 +13,60 @@
     <a href="{{ path('anime_index') }}" class="inline-flex items-center gap-2 text-slate-300 hover:text-white underline decoration-neon-500 underline-offset-4">← Retour</a>
   </div>
 </article>
+
+{# Messages #}
+{% for message in app.flashes('success') %}
+  <div class="mt-4 rounded-md border border-neon-500/40 bg-neon-500/10 text-neon-100 p-3">{{ message }}</div>
+{% endfor %}
+
+{# Formulaire de suivi (si connecté) #}
+{% if form %}
+  <section class="mt-8 rounded-xl border border-slate-800 bg-night-800/50 p-6 backdrop-blur">
+    <h2 class="text-xl font-display font-semibold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-sakura-500 to-neon-500">Ton suivi</h2>
+    {{ form_start(form, {'attr': {'class': 'grid md:grid-cols-2 gap-4'}}) }}
+      {{ form_row(form.status, {
+        label_attr: {'class': 'block text-sm text-slate-300'},
+        attr: {'class': 'mt-1 w-full rounded-md border border-slate-700 bg-night-900/60 text-slate-100 focus:border-neon-500 focus:ring-neon-500'}
+      }) }}
+      {{ form_row(form.rating, {
+        label_attr: {'class': 'block text-sm text-slate-300'},
+        attr: {'class': 'mt-1 w-full rounded-md border border-slate-700 bg-night-900/60 text-slate-100 focus:border-neon-500 focus:ring-neon-500'}
+      }) }}
+      {{ form_row(form.comment, {
+        label_attr: {'class': 'block text-sm text-slate-300'},
+        attr: {'class': 'mt-1 md:col-span-2 w-full rounded-md border border-slate-700 bg-night-900/60 text-slate-100 focus:border-neon-500 focus:ring-neon-500', 'rows': 4}
+      }) }}
+      <div class="md:col-span-2 flex items-center justify-between">
+        {{ form_row(form.isPublic, {
+          label_attr: {'class': 'text-sm text-slate-300'},
+          attr: {'class': 'rounded accent-neon-500'}
+        }) }}
+        <button class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-sakura-500 to-neon-500 text-night-900 font-semibold hover:opacity-90" type="submit">Enregistrer</button>
+      </div>
+    {{ form_end(form) }}
+  </section>
+{% endif %}
+
+{# Commentaires publics #}
+<section class="mt-8">
+  <h2 class="text-xl font-display font-semibold mb-4 text-slate-200">Commentaires publics</h2>
+  {% if publicComments %}
+    <ul class="space-y-3">
+      {% for ua in publicComments %}
+        <li class="rounded-xl border border-slate-800 bg-night-800/40 p-4">
+          <div class="flex items-center justify-between mb-2">
+            <div class="text-sm text-slate-300">par <span class="font-semibold">{{ ua.user.userIdentifier }}</span></div>
+            <div class="text-xs text-slate-400">{{ ua.updatedAt|date('d/m/Y H:i') }}</div>
+          </div>
+          {% if ua.rating %}
+            <div class="mb-2 text-sm text-slate-300">Note: ★ {{ ua.rating }}</div>
+          {% endif %}
+          <p class="text-slate-200">{{ ua.comment }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-slate-400">Aucun commentaire public pour le moment.</p>
+  {% endif %}
+</section>
 {% endblock %}

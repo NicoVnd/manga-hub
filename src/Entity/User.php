@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -32,6 +34,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, UserAnime>
+     */
+    #[ORM\OneToMany(targetEntity: UserAnime::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $userAnimes;
+
+    public function __construct()
+    {
+        $this->userAnimes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -112,5 +125,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    /**
+     * @return Collection<int, UserAnime>
+     */
+    public function getUserAnimes(): Collection
+    {
+        return $this->userAnimes;
+    }
+
+    public function addUserAnime(UserAnime $userAnime): static
+    {
+        if (!$this->userAnimes->contains($userAnime)) {
+            $this->userAnimes->add($userAnime);
+            $userAnime->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAnime(UserAnime $userAnime): static
+    {
+        if ($this->userAnimes->removeElement($userAnime)) {
+            // set the owning side to null (unless already changed)
+            if ($userAnime->getUser() === $this) {
+                $userAnime->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

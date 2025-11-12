@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AnimeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -37,6 +39,17 @@ class Anime
 
     #[ORM\Column]
     private ?\DateTime $updatedAt = null;
+
+    /**
+     * @var Collection<int, UserAnime>
+     */
+    #[ORM\OneToMany(targetEntity: UserAnime::class, mappedBy: 'anime', orphanRemoval: true)]
+    private Collection $userAnimes;
+
+    public function __construct()
+    {
+        $this->userAnimes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -135,6 +148,36 @@ class Anime
     public function setUpdatedAt(\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserAnime>
+     */
+    public function getUserAnimes(): Collection
+    {
+        return $this->userAnimes;
+    }
+
+    public function addUserAnime(UserAnime $userAnime): static
+    {
+        if (!$this->userAnimes->contains($userAnime)) {
+            $this->userAnimes->add($userAnime);
+            $userAnime->setAnime($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAnime(UserAnime $userAnime): static
+    {
+        if ($this->userAnimes->removeElement($userAnime)) {
+            // set the owning side to null (unless already changed)
+            if ($userAnime->getAnime() === $this) {
+                $userAnime->setAnime(null);
+            }
+        }
 
         return $this;
     }
