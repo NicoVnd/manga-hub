@@ -1,13 +1,16 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ anime.title }}{% endblock %}
 {% block body %}
-<article class="grid md:grid-cols-2 gap-6">
-  <img src="{{ anime.coverUrl }}" alt="{{ anime.title }}" class="rounded">
+<article class="grid md:grid-cols-2 gap-6 bg-night-800/50 border border-slate-800 rounded-xl p-6 backdrop-blur">
+  <img src="{{ anime.coverUrl }}" alt="{{ anime.title }}" class="rounded-xl ring-1 ring-slate-700 shadow-lg">
   <div>
-    <h1 class="text-3xl font-bold mb-2">{{ anime.title }}</h1>
-    <div class="mb-2 text-sm text-slate-600">Statut: {{ anime.status }} • Note: {{ anime.avgRating ?? '—' }}</div>
-    <p class="mb-6">{{ anime.synopsis }}</p>
-    <a href="{{ path('anime_index') }}" class="underline">← Retour</a>
+    <h1 class="text-3xl md:text-4xl font-display font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-sakura-500 to-neon-500">{{ anime.title }}</h1>
+    <div class="mb-3 flex flex-wrap gap-2 text-sm">
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-800/60 border border-slate-700 text-slate-300">Statut: {{ anime.status }}</span>
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-slate-800/60 border border-slate-700 text-slate-300">Note: {{ anime.avgRating ?? '—' }}</span>
+    </div>
+    <p class="mb-6 text-slate-200 leading-relaxed">{{ anime.synopsis }}</p>
+    <a href="{{ path('anime_index') }}" class="inline-flex items-center gap-2 text-slate-300 hover:text-white underline decoration-neon-500 underline-offset-4">← Retour</a>
   </div>
 </article>
 {% endblock %}

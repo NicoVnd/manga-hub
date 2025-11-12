@@ -1,34 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
-<form method="post">
+<section class="max-w-md mx-auto">
+  <form method="post" class="space-y-4 rounded-xl border border-slate-800 bg-night-800/50 p-6 backdrop-blur">
     {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+      <div class="rounded-md border border-sakura-500/50 bg-sakura-500/10 text-sakura-200 p-2 text-sm">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+      </div>
     {% endif %}
 
     {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
+      <div class="mb-2 text-slate-300 text-sm">
+        Connecté en tant que <span class="font-semibold">{{ app.user.userIdentifier }}</span>,
+        <a class="underline decoration-neon-500 underline-offset-4" href="{{ path('app_logout') }}">Déconnexion</a>
+      </div>
     {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputUsername">Username</label>
-    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    <h1 class="text-2xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-sakura-500 to-neon-500">Connexion</h1>
+
+    <label for="inputUsername" class="block text-sm text-slate-300">Nom d’utilisateur</label>
+    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" autocomplete="username" required autofocus
+           class="mt-1 w-full rounded-md border border-slate-700 bg-night-900/60 text-slate-100 placeholder-slate-500 focus:border-neon-500 focus:ring-neon-500">
+
+    <label for="inputPassword" class="block text-sm text-slate-300">Mot de passe</label>
+    <input type="password" name="password" id="inputPassword" autocomplete="current-password" required
+           class="mt-1 w-full rounded-md border border-slate-700 bg-night-900/60 text-slate-100 placeholder-slate-500 focus:border-neon-500 focus:ring-neon-500">
+
     <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
 
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
-        </label>
-    </div>
+    <label class="inline-flex items-center gap-2 text-sm text-slate-300">
+      <input type="checkbox" name="_remember_me" class="rounded accent-neon-500">
+      Se souvenir de moi
+    </label>
 
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
+    <button class="w-full inline-flex justify-center items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-sakura-500 to-neon-500 text-night-900 font-semibold hover:opacity-90" type="submit">
+      Se connecter
     </button>
-</form>
+    <p class="text-center text-xs text-slate-400">Pas de compte ?
+      <a href="{{ path('app_register') }}" class="underline decoration-neon-500 underline-offset-4">Inscription</a>
+    </p>
+  </form>
+</section>
 {% endblock %}
