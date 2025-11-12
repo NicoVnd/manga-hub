@@ -152,6 +152,12 @@ class Anime
         return $this;
     }
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $source = 'JIKAN'; // ou 'ANILIST', 'KITSU'
+
+    #[ORM\Column(length: 100, nullable: true, unique: true)]
+    private ?string $externalId = null;
+
     /**
      * @return Collection<int, UserAnime>
      */
@@ -179,6 +185,28 @@ class Anime
             }
         }
 
+        return $this;
+    }
+
+    public function getExternalId(): ?string
+    {
+        return $this->externalId;
+    }
+
+    public function setExternalId(?string $externalId): static
+    {
+        $this->externalId = $externalId;
+        return $this;
+    }
+
+    public function getSource(): ?string
+    {
+        return $this->source;
+    }
+
+    public function setSource(?string $source): static
+    {
+        $this->source = $source;
         return $this;
     }
 }

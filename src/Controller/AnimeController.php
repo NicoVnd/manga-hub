@@ -19,7 +19,7 @@ class AnimeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function home(AnimeRepository $repo): Response
     {
-        $top = $repo->findBy([], ['avgRating' => 'DESC'], 5);
+        $top = $repo->findBy([], ['avgRating' => 'DESC'], 125);
         return $this->render('anime/home.html.twig', ['top' => $top]);
     }
 
