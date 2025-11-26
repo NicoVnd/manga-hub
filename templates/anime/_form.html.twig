@@ -1,4 +1,58 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+
+{# Name Field #}
+<div class="space-y-2">
+	{{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-300'}}) }}
+	{{ form_widget(form.name, {'attr': {'class': 'w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all'}}) }}
+	{{ form_errors(form.name, {'attr': {'class': 'text-red-400 text-sm mt-1'}}) }}
+</div>
+
+{# Description Field #}
+<div class="space-y-2">
+	{{ form_label(form.description, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-300'}}) }}
+	{{ form_widget(form.description, {'attr': {'class': 'w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all min-h-[120px] resize-y'}}) }}
+	{{ form_errors(form.description, {'attr': {'class': 'text-red-400 text-sm mt-1'}}) }}
+</div>
+
+<div
+	class="grid grid-cols-1 md:grid-cols-2 gap-6">
+	{# Note Field #}
+	<div class="space-y-2">
+		{{ form_label(form.note, null, {'label_attr': {'class': 'block text-sm font-medium text-slate-300'}}) }}
+		{{ form_widget(form.note, {'attr': {'class': 'w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all'}}) }}
+		{{ form_errors(form.note, {'attr': {'class': 'text-red-400 text-sm mt-1'}}) }}
+	</div>
+
+	{# Published Checkbox #}
+	<div class="flex items-center h-full pt-8">
+		<label class="relative inline-flex items-center cursor-pointer group">
+			{{ form_widget(form.isPublished, {'attr': {'class': 'sr-only peer'}}) }}
+			<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+			<span class="ml-3 text-sm font-medium text-slate-300 group-hover:text-white transition-colors">Publish immediately</span>
+		</label>
+	</div>
+</div>
+
+{# Image Upload Field #}
+<div class="space-y-2">
+	{{ form_label(form.imageFileName, 'Cover Image', {'label_attr': {'class': 'block text-sm font-medium text-slate-300'}}) }}
+	<div class="relative group">
+		{{ form_widget(form.imageFileName, {'attr': {'class': 'block w-full text-sm text-slate-400
+                file:mr-4 file:py-3 file:px-4
+                file:rounded-xl file:border-0
+                file:text-sm file:font-semibold
+                file:bg-slate-700 file:text-white
+                hover:file:bg-slate-600
+                cursor-pointer bg-slate-900/50 border border-slate-700 rounded-xl
+                focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all'
+            }}) }}
+	</div>
+	{{ form_errors(form.imageFileName, {'attr': {'class': 'text-red-400 text-sm mt-1'}}) }}
+	<p class="text-xs text-slate-500">Allowed formats: JPG, PNG. Max size: 1MB.</p>
+</div>
+
+<button type="submit" class="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 transform hover:-translate-y-0.5 transition-all duration-200">
+	{{ button_label|default('Save Anime') }}
+</button>
+
 {{ form_end(form) }}
