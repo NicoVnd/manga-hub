@@ -1,39 +1,65 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Anime index{% endblock %}
+{% block title %}Anime index
+{% endblock %}
 
 {% block body %}
-    <h1>Anime index</h1>
+	<div class="container mx-auto px-4 py-8 max-w-6xl">
+		<div class="flex justify-between items-center mb-8">
+			<h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Anime Collection</h1>
+			<a href="{{ path('app_anime_new') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow-lg shadow-blue-500/20 transition-all duration-300 font-medium flex items-center gap-2">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+				</svg>
+				Create New
+			</a>
+		</div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Note</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for anime in animes %}
-            <tr>
-                <td>{{ anime.id }}</td>
-                <td>{{ anime.name }}</td>
-                <td>{{ anime.description }}</td>
-                <td>{{ anime.note }}</td>
-                <td>
-                    <a href="{{ path('app_anime_show', {'id': anime.id}) }}">show</a>
-                    <a href="{{ path('app_anime_edit', {'id': anime.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_anime_new') }}">Create new</a>
+		<div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700 overflow-hidden shadow-xl">
+			<div class="overflow-x-auto">
+				<table class="w-full text-left text-slate-300">
+					<thead class="bg-slate-900/50 text-slate-400 uppercase text-xs font-semibold tracking-wider">
+						<tr>
+							<th class="px-6 py-4">Id</th>
+							<th class="px-6 py-4">Name</th>
+							<th class="px-6 py-4">Description</th>
+							<th class="px-6 py-4">Note</th>
+							<th class="px-6 py-4 text-right">Actions</th>
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-slate-700/50">
+						{% for anime in animes %}
+							<tr class="hover:bg-slate-700/30 transition-colors duration-200">
+								<td class="px-6 py-4 font-mono text-slate-500 text-sm">{{ anime.id }}</td>
+								<td class="px-6 py-4 font-medium text-white">{{ anime.name }}</td>
+								<td class="px-6 py-4 text-sm text-slate-400 max-w-xs truncate" title="{{ anime.description }}">{{ anime.description }}</td>
+								<td class="px-6 py-4">
+									{% if anime.note %}
+										<span class="px-2 py-1 rounded-md bg-slate-700 text-xs font-medium text-slate-300 border border-slate-600">{{ anime.note }}</span>
+									{% else %}
+										<span class="text-slate-600 text-xs">-</span>
+									{% endif %}
+								</td>
+								<td class="px-6 py-4 text-right space-x-2">
+									<a href="{{ path('app_anime_show', {'id': anime.id}) }}" class="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors">Show</a>
+									<a href="{{ path('app_anime_edit', {'id': anime.id}) }}" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">Edit</a>
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="5" class="px-6 py-12 text-center text-slate-500">
+									<div class="flex flex-col items-center gap-2">
+										<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 opacity-50">
+											<path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+										</svg>
+										<span>No records found</span>
+									</div>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 {% endblock %}
