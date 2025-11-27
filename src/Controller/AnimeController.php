@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/')]
 final class AnimeController extends AbstractController
@@ -24,6 +25,9 @@ final class AnimeController extends AbstractController
         ]);
     }
 
+    
+
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_anime_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
@@ -73,6 +77,7 @@ final class AnimeController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_anime_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Anime $anime, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
@@ -111,6 +116,7 @@ final class AnimeController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_anime_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Anime $anime, EntityManagerInterface $entityManager): Response
     {
