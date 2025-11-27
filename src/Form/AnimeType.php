@@ -48,8 +48,6 @@ class AnimeType extends AbstractType
                     ])
                 ],
             ])
-            
-
             ->add('isPublished')
         ;
     }

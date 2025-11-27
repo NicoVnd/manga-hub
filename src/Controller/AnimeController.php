@@ -65,7 +65,7 @@ final class AnimeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_anime_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_anime_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Anime $anime): Response
     {
         return $this->render('anime/show.html.twig', [
@@ -73,7 +73,7 @@ final class AnimeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_anime_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_anime_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Anime $anime, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(AnimeType::class, $anime);
@@ -111,7 +111,7 @@ final class AnimeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_anime_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_anime_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Anime $anime, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$anime->getId(), $request->getPayload()->getString('_token'))) {
